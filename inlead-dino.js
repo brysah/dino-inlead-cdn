@@ -498,6 +498,59 @@
 
 }
 
+
+#popup-box{
+  display:none;
+  position:fixed;
+  bottom:60px;
+  left:15px;
+  border-radius:12px;
+  padding:14px 18px;
+  box-shadow:0 4px 8px rgba(0,0,0,0.15);
+  font-family:Arial,sans-serif;
+  color:#333;
+  z-index:9999;
+  max-width:360px;
+  align-items:center;
+  gap:10px;
+  animation:fadeIn .4s ease-out;
+  font-size:14px;
+  background-color:#fff;
+  box-sizing:border-box;
+}
+
+#popup-icon{
+  font-size:18px;
+  min-width:20px;
+}
+
+#popup-text{
+  flex:1;
+}
+
+@keyframes fadeIn{
+  from{
+    opacity:0;
+    transform:scale(.95);
+  }
+  to{
+    opacity:1;
+    transform:scale(1);
+  }
+}
+
+@media(max-width:480px){
+
+  #popup-box{
+    font-size:13px !important;
+    bottom:70px !important;
+    left:10px !important;
+    right:10px !important;
+    max-width:95% !important;
+  }
+
+}
+
 `;
 
 
@@ -588,6 +641,31 @@
       )
     ) {
       return true;
+    }
+
+
+    if (
+      !document.getElementById(
+        "popup-box"
+      )
+    ) {
+
+      var popup =
+        document.createElement(
+          "div"
+        );
+
+      popup.id =
+        "popup-box";
+
+      popup.innerHTML =
+        '<div id="popup-icon">\u2714</div>' +
+        '<span id="popup-text"></span>';
+
+      document.body.appendChild(
+        popup
+      );
+
     }
 
 
@@ -690,6 +768,7 @@
 
       startConfetti();
       startBalloons();
+      startSocialProof();
 
     }
 
@@ -1206,6 +1285,205 @@
 
     }
 
+  }
+
+
+
+  /* =========================
+     SOCIAL PROOF
+     ========================= */
+
+  function startSocialProof() {
+
+    var nomesMulheres = [
+      "Emily Johnson",
+      "Jessica Miller",
+      "Ashley Davis",
+      "Sarah Wilson",
+      "Amanda Taylor",
+      "Jennifer Moore",
+      "Samantha Anderson",
+      "Megan Thomas",
+      "Rachel Jackson",
+      "Lauren White",
+      "Nicole Harris",
+      "Stephanie Martin",
+      "Brittany Thompson",
+      "Kayla Garcia",
+      "Heather Martinez",
+      "Melissa Robinson",
+      "Danielle Clark",
+      "Rebecca Lewis",
+      "Michelle Walker",
+      "Christina Hall"
+    ];
+
+    var nomesHomens = [
+      "Michael Johnson",
+      "James Smith",
+      "David Miller",
+      "Daniel Brown",
+      "Matthew Davis",
+      "Christopher Wilson",
+      "Andrew Taylor",
+      "Robert Anderson",
+      "Joshua Thomas",
+      "Ryan Jackson",
+      "Brandon White",
+      "Justin Harris",
+      "Kevin Martin",
+      "Eric Thompson",
+      "Jason Garcia",
+      "Brian Martinez"
+    ];
+
+    var frasesCompra = [
+      "just got access to Dino Teaches\u2122.",
+      "just joined Dino Teaches\u2122.",
+      "just unlocked Dino Teaches\u2122 for their child.",
+      "started Dino Teaches\u2122 today.",
+      "activated Dino Teaches\u2122."
+    ];
+
+    var exibicoes = [
+      { delay: 10000, duracao: 5000 },
+      { delay: 13000, duracao: 6000 },
+      { delay: 20000, duracao: 8000 },
+      { delay: 35000, duracao: 12000 }
+    ];
+
+    var contador = 0;
+
+    function escolherNomeAleatorio() {
+      var isMulher =
+        Math.random() < 0.75;
+
+      var lista = isMulher
+        ? nomesMulheres
+        : nomesHomens;
+
+      var nome =
+        lista[
+          Math.floor(
+            Math.random() *
+              lista.length
+          )
+        ];
+
+      return {
+        nome: nome,
+        isMulher: isMulher
+      };
+    }
+
+    function mostrarPopup(delayIndex) {
+
+      var pessoa =
+        escolherNomeAleatorio();
+
+      var box =
+        document.getElementById(
+          "popup-box"
+        );
+
+      var content =
+        document.getElementById(
+          "popup-text"
+        );
+
+      var icon =
+        document.getElementById(
+          "popup-icon"
+        );
+
+      if (
+        !box ||
+        !content ||
+        !icon
+      ) {
+        return;
+      }
+
+      if (
+        (contador + 1) % 3 === 0
+      ) {
+        content.textContent =
+          pessoa.nome +
+          " recommends Dino Teaches\u2122 \u2b50\u2b50\u2b50\u2b50\u2b50";
+
+        icon.textContent = "";
+      } else {
+
+        var frase =
+          frasesCompra[
+            Math.floor(
+              Math.random() *
+                frasesCompra.length
+            )
+          ];
+
+        content.textContent =
+          pessoa.nome +
+          ", " +
+          frase;
+
+        icon.textContent = "\u2714";
+      }
+
+      if (pessoa.isMulher) {
+        box.style.backgroundColor =
+          "#ffe6ec";
+
+        box.style.border =
+          "2px solid #ff9eb5";
+      } else {
+        box.style.backgroundColor =
+          "#e0f0ff";
+
+        box.style.border =
+          "2px solid #94c9ff";
+      }
+
+      box.style.display = "flex";
+
+      setTimeout(
+        function () {
+          box.style.display =
+            "none";
+        },
+        exibicoes[
+          delayIndex %
+            exibicoes.length
+        ].duracao
+      );
+
+      var proximoIndex =
+        (delayIndex + 1) %
+        exibicoes.length;
+
+      var proximoDelay =
+        exibicoes[
+          proximoIndex
+        ].delay;
+
+      setTimeout(
+        function () {
+          mostrarPopup(
+            proximoIndex
+          );
+        },
+        proximoDelay
+      );
+
+      contador++;
+    }
+
+    setTimeout(
+      function () {
+        mostrarPopup(0);
+      },
+      exibicoes[0].delay
+    );
   }
 
 
