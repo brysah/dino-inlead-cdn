@@ -644,31 +644,6 @@
     }
 
 
-    if (
-      !document.getElementById(
-        "popup-box"
-      )
-    ) {
-
-      var popup =
-        document.createElement(
-          "div"
-        );
-
-      popup.id =
-        "popup-box";
-
-      popup.innerHTML =
-        '<div id="popup-icon">\u2714</div>' +
-        '<span id="popup-text"></span>';
-
-      document.body.appendChild(
-        popup
-      );
-
-    }
-
-
     var box =
       document.createElement(
         "div"
@@ -768,7 +743,6 @@
 
       startConfetti();
       startBalloons();
-      startSocialProof();
 
     }
 
@@ -1491,6 +1465,36 @@
      INICIALIZA
      ========================= */
 
+  var socialProofStarted = false;
+
+  function ensurePopupElement() {
+
+    if (
+      !document.getElementById(
+        "popup-box"
+      )
+    ) {
+
+      var popup =
+        document.createElement(
+          "div"
+        );
+
+      popup.id =
+        "popup-box";
+
+      popup.innerHTML =
+        '<div id="popup-icon">\u2714</div>' +
+        '<span id="popup-text"></span>';
+
+      document.body.appendChild(
+        popup
+      );
+
+    }
+
+  }
+
   function mount() {
 
     injectStyles();
@@ -1498,6 +1502,8 @@
     removeOrphanPlanBox();
 
     mountPlanBox();
+
+    ensurePopupElement();
 
 
     if (!window.__vturbCk) {
@@ -1568,6 +1574,15 @@
 
 
     mount();
+
+
+    if (!socialProofStarted) {
+
+      socialProofStarted = true;
+
+      startSocialProof();
+
+    }
 
   }
 
